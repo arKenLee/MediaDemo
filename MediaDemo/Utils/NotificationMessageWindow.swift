@@ -17,6 +17,7 @@ extension NotificationMessageWindow {
     }
 }
 
+/// 通知消息窗口
 class NotificationMessageWindow: UIWindow {
     
     private let label: UILabel

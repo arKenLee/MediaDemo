@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-enum AudioPlayMode {
+enum AudioLoopMode {
     case random, loop, singleLoop
 }
 
@@ -24,30 +24,32 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     @IBOutlet weak var lyricsView: UITextView!
     @IBOutlet weak var currentTimeLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
-    @IBOutlet weak var controlSlider: UISlider!
+    @IBOutlet weak var controlSlider: ControlSlider!
     
     @IBOutlet weak var loopButton: UIButton!
-    @IBOutlet weak var toggleButton: UIButton!
+    @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var previousButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var moreButton: UIButton!
 
     @IBOutlet weak var bottomButtonLayout: NSLayoutConstraint!
     
-    fileprivate var timer: Timer?
-    fileprivate var audioPlayer: AVAudioPlayer?
-    fileprivate var audioURLs = [URL]()
+    private var timer: Timer?
+    private var audioURLs = [URL]()
     
-    fileprivate var trackHistory = [Int]()
-    fileprivate var currentTrackIndex = -1
-    fileprivate var currentPlayMode = AudioPlayMode.random
-    fileprivate var sliderDragging = false
-    fileprivate var shouldResumePlay = false
+    private var trackHistory = [Int]()
+    private var currentTrackIndex = -1
+    private var currentLoopMode = AudioLoopMode.random
+    private var sliderDragging = false
+    private var shouldResumePlay = false
 
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        controlSlider.setThumbImage(#imageLiteral(resourceName: "player_slider_dot"), for: .normal)
+        controlSlider.setThumbImage(#imageLiteral(resourceName: "player_slider_dot_big"), for: .highlighted)
 
         addBlurEffectBackground()
         
@@ -96,21 +98,17 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
                           "Chris Medina - What Are Words",
                           "OneRepublic - Counting Stars",
                           "Zella Day - East of Eden",
-                          "Young Rising Sons - Turnin"]
+                          "Young Rising Sons - Turnin'"]
         
-        let mainBundle = Bundle.main
-        
-        for audioName in audioNames {
-            if let audioURL = mainBundle.url(forResource: audioName, withExtension: "mp3") {
-                audioURLs.append(audioURL)
-            }
-        }
+        audioURLs = audioNames.map({ (audioName: String) -> URL? in
+            return Bundle.main.url(forResource: audioName, withExtension: "mp3")
+        }).flatMap{$0}
         
         loadAudio(index: 0)
     }
     
     // MARK: - Audio
-    fileprivate func loadAudio(index: Int) {
+    private func loadAudio(index: Int) {
         guard index >= 0 && index < audioURLs.count else {
             return
         }
@@ -171,64 +169,76 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
             do {
                 try audioSession.setCategory(AVAudioSessionCategoryPlayback)
             } catch let error {
-                NotificationMessageWindow.show(message: error.localizedDescription)
+                NotificationMessageWindow.show(message: "音频播放时设置音频会话类别为[播放]类别失败: \(error.localizedDescription)")
             }
         }
         
         do {
             let player = try AVAudioPlayer(contentsOf: audioURL)
-            if currentPlayMode == .singleLoop {
+
+            if currentLoopMode == .singleLoop {
                 player.numberOfLoops = NSIntegerMax
             }
             
             player.delegate = self
             player.prepareToPlay()
             
-            currentTimeLabel.text = timeString(with: player.currentTime)
-            durationLabel.text = timeString(with: player.duration)
+            currentTimeLabel.text = player.currentTime.playTimeString
+            durationLabel.text = player.duration.playTimeString
             controlSlider.value = 0
             controlSlider.minimumValue = 0
             controlSlider.maximumValue = Float(player.duration)
-            audioPlayer = player
+            globalPlayer.audioPlayer = player
+            globalPlayer.type = .audioPlayer
+            
         } catch let error {
-            audioPlayer = nil
             currentTimeLabel.text = "--:--"
             durationLabel.text = "--:--"
             controlSlider.value = 0
             controlSlider.minimumValue = 0
             controlSlider.maximumValue = 1
-            NotificationMessageWindow.show(message: error.localizedDescription)
+            NotificationMessageWindow.show(message: "初始化录音播放失败: \(error.localizedDescription)")
         }
     }
     
-    fileprivate func startPlay() {
-        if let player = audioPlayer {
-            if player.play() {
-                toggleButton.setImage(#imageLiteral(resourceName: "button_pause"), for: .normal)
+    private func startPlay() {
+        if globalPlayer.type != .audioPlayer {
+            loadAudio(index: currentTrackIndex)
+            startPlay()
+        } else {
+            
+            if let player = globalPlayer.audioPlayer {
+                if player.play() {
+                    playPauseButton.setImage(#imageLiteral(resourceName: "audio_button_pause"), for: .normal)
+                    
+                    if let timer = timer, timer.isValid {
+                        timer.fireDate = Date.distantPast
+                    } else {
+                        timer = Timer(timeInterval: 0.1, target: self, selector: #selector(updatePlayProgress), userInfo: nil, repeats: true)
+                        RunLoop.current.add(timer!, forMode: .commonModes)
+                    }
+                }
             }
         }
-        
-        if let timer = timer, timer.isValid {
-            timer.fireDate = Date.distantPast
-        } else {
-            timer = Timer(timeInterval: 0.1, target: self, selector: #selector(updatePlayProgress), userInfo: nil, repeats: true)
-            RunLoop.current.add(timer!, forMode: .commonModes)
-        }
     }
     
-    fileprivate func pausePlay() {
-        toggleButton.setImage(#imageLiteral(resourceName: "button_play"), for: .normal)
-        
-        if let player = audioPlayer {
-            player.pause()
+    private func pausePlay() {
+        guard GlobalPlayer.shared.type == .audioPlayer else {
+            return
         }
+        
+        if globalPlayer.audioPlayerIsPlaying {
+            globalPlayer.audioPlayer?.pause()
+        }
+        
+        playPauseButton.setImage(#imageLiteral(resourceName: "audio_button_play"), for: .normal)
         
         if let timer = timer, timer.isValid {
             timer.fireDate = Date.distantFuture
         }
     }
     
-    fileprivate func playAudio(playNext: Bool) {
+    private func playAudio(playNext: Bool) {
         var index = currentTrackIndex
         
         if !playNext && trackHistory.count > 1 {
@@ -238,7 +248,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
             if !playNext {
                 trackHistory.removeLast()
             }
-            switch currentPlayMode {
+            switch currentLoopMode {
             case .loop, .singleLoop:
                 index += playNext ? 1 : -1
                 if index < 0 {
@@ -257,43 +267,23 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         startPlay()
     }
     
-    @objc fileprivate func updatePlayProgress() {
-        guard let player = audioPlayer else {
-            return
+    @objc private func updatePlayProgress() {
+        let globalPlayer = GlobalPlayer.shared
+        if let player = globalPlayer.audioPlayer, globalPlayer.type == .audioPlayer {
+            
+            currentTimeLabel.text = player.currentTime.playTimeString
+            
+            if !sliderDragging {
+                controlSlider.value = Float(player.currentTime)
+            }
         }
-        
-        currentTimeLabel.text = timeString(with: player.currentTime)
-        
-        if !sliderDragging {
-            controlSlider.value = Float(player.currentTime)
-        }
-    }
-    
-    fileprivate func timeString(with duration: TimeInterval) -> String {
-        var time = Int(duration)
-        
-        let second = time % 60
-        time /= 60
-        
-        if time < 60 {
-            return String(format: "%02d:%02d", time, second)
-        }
-        
-        let minute = time % 60
-        time /= 60
-        
-        return String(format: "%d:%02d:%02d", time, minute, second)
     }
     
     
     // MARK: - Actions
     
-    @IBAction func toggleButtonClicked(_ sender: UIButton) {
-        guard let player = audioPlayer else {
-            return
-        }
-        
-        if player.isPlaying {
+    @IBAction func playPauseButtonClicked(_ sender: UIButton) {
+        if globalPlayer.type == .audioPlayer && globalPlayer.audioPlayerIsPlaying {
             pausePlay()
         } else {
             startPlay()
@@ -308,22 +298,26 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         playAudio(playNext: true)
     }
     
-    @IBAction func loopButtonClicked(_ sender: UIButton) {
-        switch currentPlayMode {
+    @IBAction func toggleLoopMode(_ sender: UIButton) {
+        guard GlobalPlayer.shared.type == .audioPlayer else {
+            return
+        }
+        
+        switch currentLoopMode {
         case .random:
-            currentPlayMode = .loop
-            loopButton.setImage(#imageLiteral(resourceName: "button_loop_all"), for: .normal)
-            audioPlayer?.numberOfLoops = 0
+            currentLoopMode = .loop
+            loopButton.setImage(#imageLiteral(resourceName: "audio_button_loop_all"), for: .normal)
+            globalPlayer.audioPlayer?.numberOfLoops = 0
             
         case .loop:
-            currentPlayMode = .singleLoop
-            loopButton.setImage(#imageLiteral(resourceName: "button_loop_single"), for: .normal)
-            audioPlayer?.numberOfLoops = NSIntegerMax
+            currentLoopMode = .singleLoop
+            loopButton.setImage(#imageLiteral(resourceName: "audio_button_loop_single"), for: .normal)
+            globalPlayer.audioPlayer?.numberOfLoops = NSIntegerMax
             
         case .singleLoop:
-            currentPlayMode = .random
-            loopButton.setImage(#imageLiteral(resourceName: "button_shuffle"), for: .normal)
-            audioPlayer?.numberOfLoops = 0
+            currentLoopMode = .random
+            loopButton.setImage(#imageLiteral(resourceName: "audio_button_shuffle"), for: .normal)
+            globalPlayer.audioPlayer?.numberOfLoops = 0
         }
     }
     
@@ -334,15 +328,18 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     
     @IBAction func sliderTouchCancel(_ sender: UISlider) {
         sliderDragging = false
-        sender.value = Float(audioPlayer?.currentTime ?? 0)
+        
+        if let player = globalPlayer.audioPlayer, globalPlayer.type == .audioPlayer {
+            sender.value = Float(player.currentTime)
+        }
     }
     
     @IBAction func sliderTouchUp(_ sender: UISlider) {
         sliderDragging = false
         
-        if let player = audioPlayer {
+        if let player = globalPlayer.audioPlayer, globalPlayer.type == .audioPlayer && player.duration > 0 {
             player.currentTime = TimeInterval(sender.value)
-            currentTimeLabel.text = timeString(with: player.currentTime)
+            currentTimeLabel.text = player.currentTime.playTimeString
         }
     }
     
@@ -384,7 +381,8 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         NotificationMessageWindow.show(message: "\(player.url?.lastPathComponent ?? "") 播放完毕 \(flag)")
-        switch currentPlayMode {
+        
+        switch currentLoopMode {
         case .singleLoop:
             loadAudio(index: currentTrackIndex)
             startPlay()
@@ -400,36 +398,106 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     // MARK: - Notification
     
     private func registerNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(_:)), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        let audioSession = AVAudioSession.sharedInstance()
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(globalPlayerTypeWillChange(_:)), name: GlobalPlayerTypeWillChange, object: globalPlayer)
+        notificationCenter.addObserver(self, selector: #selector(handleInterruption(_:)), name: .AVAudioSessionInterruption, object: audioSession)
+        notificationCenter.addObserver(self, selector: #selector(handleRouteChange(_:)), name: .AVAudioSessionRouteChange, object: audioSession)
     }
     
     private func deregisterNotification() {
-        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        let audioSession = AVAudioSession.sharedInstance()
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.removeObserver(self, name: GlobalPlayerTypeWillChange, object: globalPlayer)
+        notificationCenter.removeObserver(self, name: .AVAudioSessionInterruption, object: audioSession)
+        notificationCenter.removeObserver(self, name: .AVAudioSessionRouteChange, object: audioSession)
+    }
+    
+    @objc private func globalPlayerTypeWillChange(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let oldType = userInfo[GlobalPlayerOldTypeItem] as? AudioPlayerType,
+            let newType = userInfo[GlobalPlayerNewTypeItem] as? AudioPlayerType else {
+                return
+        }
+        
+        if oldType == .audioPlayer, newType != .audioPlayer {
+            if globalPlayer.audioPlayerIsPlaying {
+                globalPlayer.audioPlayer?.pause()
+            }
+            
+            playPauseButton.setImage(#imageLiteral(resourceName: "audio_button_play"), for: .normal)
+            
+            if let timer = timer, timer.isValid {
+                timer.fireDate = Date.distantFuture
+            }
+        }
     }
     
     // 处理中断情况
     @objc private func handleInterruption(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
+        guard
+            let userInfo = notification.userInfo,
+            let typeNumber = userInfo[AVAudioSessionInterruptionTypeKey] as? NSNumber,
+            let type = AVAudioSessionInterruptionType(rawValue: typeNumber.uintValue) else {
+                return
+        }
         
-        if let type = userInfo[AVAudioSessionInterruptionTypeKey] as? AVAudioSessionInterruptionType {
-            switch type {
-            case .began:
-                if let player = audioPlayer {
-                    if player.isPlaying {
-                        shouldResumePlay = true
-                        pausePlay()
-                    }
-                }
-                
-            case .ended:
-                if let options = userInfo[AVAudioSessionInterruptionOptionKey] as? AVAudioSessionInterruptionOptions {
-                    if options.contains(.shouldResume), shouldResumePlay {
-                        startPlay()
-                    }
-                }
-                shouldResumePlay = false
+        let globalPlayerType = GlobalPlayer.shared.type
+        
+        switch type {
+        case .began:
+            
+            if globalPlayerType == .audioPlayer && globalPlayer.audioPlayerIsPlaying {
+                shouldResumePlay = true
             }
             
+            playPauseButton.setImage(#imageLiteral(resourceName: "audio_button_play"), for: .normal)
+            if let timer = timer, timer.isValid {
+                timer.fireDate = Date.distantFuture
+            }
+            
+        case .ended:
+            if let optionsNumber = userInfo[AVAudioSessionInterruptionOptionKey] as? NSNumber
+                 {
+                let options = AVAudioSessionInterruptionOptions(rawValue: optionsNumber.uintValue)
+                
+                if options.contains(.shouldResume) && shouldResumePlay && globalPlayerType == .audioPlayer {
+                    startPlay()
+                }
+            }
+            
+            shouldResumePlay = false
+        }
+        
+    }
+    
+    // 硬件路由改变
+    @objc private func handleRouteChange(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let routeChangeReason = userInfo[AVAudioSessionRouteChangeReasonKey] as? NSNumber,
+            let reason = AVAudioSessionRouteChangeReason(rawValue: routeChangeReason.uintValue) else { return }
+        
+        guard let previousRoute = userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription, previousRoute.outputs.count > 0 else {
+            return
+        }
+        
+        switch reason {
+        case .oldDeviceUnavailable:
+            if let portDescription = previousRoute.outputs.first,
+                portDescription.portType == "Headphones" {
+                
+                let globalPlayerType = GlobalPlayer.shared.type
+                
+                if globalPlayerType == .audioPlayer && globalPlayer.audioPlayerIsPlaying {
+                    pausePlay()
+                }
+            }
+        default:
+            break
         }
     }
 }
