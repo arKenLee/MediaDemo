@@ -11,7 +11,7 @@ import AVFoundation
 
 
 enum AudioPlayerType {
-    case audioPlayer, recordPlayer, avPlayer
+    case audioPlayer, recordPlayer, recordListPlayer, avPlayer
 }
 
 

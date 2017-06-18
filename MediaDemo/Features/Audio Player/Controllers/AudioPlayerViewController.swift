@@ -50,7 +50,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         
         controlSlider.setThumbImage(#imageLiteral(resourceName: "player_slider_dot"), for: .normal)
         controlSlider.setThumbImage(#imageLiteral(resourceName: "player_slider_dot_big"), for: .highlighted)
-
+        
         addBlurEffectBackground()
         
         loadResources()
@@ -192,8 +192,8 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
             globalPlayer.type = .audioPlayer
             
         } catch let error {
-            currentTimeLabel.text = "--:--"
-            durationLabel.text = "--:--"
+            currentTimeLabel.text = placeholderPlayTimeString
+            durationLabel.text = placeholderPlayTimeString
             controlSlider.value = 0
             controlSlider.minimumValue = 0
             controlSlider.maximumValue = 1
@@ -404,6 +404,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         notificationCenter.addObserver(self, selector: #selector(globalPlayerTypeWillChange(_:)), name: GlobalPlayerTypeWillChange, object: globalPlayer)
         notificationCenter.addObserver(self, selector: #selector(handleInterruption(_:)), name: .AVAudioSessionInterruption, object: audioSession)
         notificationCenter.addObserver(self, selector: #selector(handleRouteChange(_:)), name: .AVAudioSessionRouteChange, object: audioSession)
+        notificationCenter.addObserver(self, selector: #selector(pauseAudio(_:)), name: AllPauseNotification, object: nil)
     }
     
     private func deregisterNotification() {
@@ -413,6 +414,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         notificationCenter.removeObserver(self, name: GlobalPlayerTypeWillChange, object: globalPlayer)
         notificationCenter.removeObserver(self, name: .AVAudioSessionInterruption, object: audioSession)
         notificationCenter.removeObserver(self, name: .AVAudioSessionRouteChange, object: audioSession)
+        notificationCenter.removeObserver(self, name: AllPauseNotification, object: nil)
     }
     
     @objc private func globalPlayerTypeWillChange(_ notification: Notification) {
@@ -499,5 +501,9 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         default:
             break
         }
+    }
+    
+    @objc private func pauseAudio(_ notification: Notification) {
+        pausePlay()
     }
 }

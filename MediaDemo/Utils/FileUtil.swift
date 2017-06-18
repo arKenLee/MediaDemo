@@ -43,7 +43,9 @@ func createDirectory(destination: URL) -> Bool {
     var isDir: ObjCBool = false
     
     if fileManager.fileExists(atPath: destination.path, isDirectory: &isDir) {
-        if !isDir.boolValue {
+        if isDir.boolValue {
+            result = true
+        } else {
             do {
                 try fileManager.removeItem(at: destination)
                 try fileManager.createDirectory(at: destination, withIntermediateDirectories: true, attributes: nil)

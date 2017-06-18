@@ -27,6 +27,10 @@
 		9B719F0F1E90EA1100829C32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B719F0E1E90EA1100829C32 /* Assets.xcassets */; };
 		9B719F121E90EA1100829C32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B719F101E90EA1100829C32 /* LaunchScreen.storyboard */; };
 		9B719F1D1E90EA1100829C32 /* MediaDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B719F1C1E90EA1100829C32 /* MediaDemoTests.swift */; };
+		9B8787B81EF52B5D001FA898 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8787B71EF52B5D001FA898 /* UIViewController+Alert.swift */; };
+		9B8787BA1EF559A6001FA898 /* AssetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8787B91EF559A6001FA898 /* AssetUtil.swift */; };
+		9B8787BC1EF57EB3001FA898 /* AudioRecordFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8787BB1EF57EB3001FA898 /* AudioRecordFileListViewController.swift */; };
+		9B8787BE1EF57EE2001FA898 /* AudioRecordFileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8787BD1EF57EE2001FA898 /* AudioRecordFileListCell.swift */; };
 		9B9E23881EED396E00778ADD /* ControlSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E23871EED396E00778ADD /* ControlSlider.swift */; };
 		9B9E238A1EED63C200778ADD /* FileUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E23891EED63C200778ADD /* FileUtil.swift */; };
 		9B9E238C1EED7C6500778ADD /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E238B1EED7C6500778ADD /* Date+Format.swift */; };
@@ -73,6 +77,10 @@
 		9B719F181E90EA1100829C32 /* MediaDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediaDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B719F1C1E90EA1100829C32 /* MediaDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDemoTests.swift; sourceTree = "<group>"; };
 		9B719F1E1E90EA1100829C32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B8787B71EF52B5D001FA898 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		9B8787B91EF559A6001FA898 /* AssetUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetUtil.swift; sourceTree = "<group>"; };
+		9B8787BB1EF57EB3001FA898 /* AudioRecordFileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecordFileListViewController.swift; sourceTree = "<group>"; };
+		9B8787BD1EF57EE2001FA898 /* AudioRecordFileListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecordFileListCell.swift; sourceTree = "<group>"; };
 		9B9E23871EED396E00778ADD /* ControlSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlSlider.swift; sourceTree = "<group>"; };
 		9B9E23891EED63C200778ADD /* FileUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtil.swift; sourceTree = "<group>"; };
 		9B9E238B1EED7C6500778ADD /* Date+Format.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
@@ -161,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				9B64EE1F1EB50F5F00143DCB /* AudioRecorderViewController.swift */,
+				9B8787BB1EF57EB3001FA898 /* AudioRecordFileListViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -175,6 +184,7 @@
 		9B29B10F1EAE394A0045667A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9B8787BD1EF57EE2001FA898 /* AudioRecordFileListCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -320,6 +330,7 @@
 				9B64EE081EB4A52300143DCB /* NotificationMessageWindow.swift */,
 				9BB500441ED9CCED00683E14 /* GlobalPlayer.swift */,
 				9B9E23891EED63C200778ADD /* FileUtil.swift */,
+				9B8787B91EF559A6001FA898 /* AssetUtil.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -329,6 +340,7 @@
 			children = (
 				9B64EE301EB5CB1C00143DCB /* TimeInterval+Format.swift */,
 				9B9E238B1EED7C6500778ADD /* Date+Format.swift */,
+				9B8787B71EF52B5D001FA898 /* UIViewController+Alert.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -469,18 +481,22 @@
 				9B64EE261EB5AF4E00143DCB /* PlayerTableViewController.swift in Sources */,
 				9B719F081E90EA1100829C32 /* AppDelegate.swift in Sources */,
 				9B64EE2C1EB5BD8A00143DCB /* VideoPlayTableViewCell.swift in Sources */,
+				9B8787B81EF52B5D001FA898 /* UIViewController+Alert.swift in Sources */,
 				9B64EE2A1EB5BD7400143DCB /* AudioPlayTableViewCell.swift in Sources */,
 				9B64EE311EB5CB1C00143DCB /* TimeInterval+Format.swift in Sources */,
 				9B64EE281EB5B07200143DCB /* PlayerView.swift in Sources */,
 				9B64EE201EB50F5F00143DCB /* AudioRecorderViewController.swift in Sources */,
 				9B64EE091EB4A52300143DCB /* NotificationMessageWindow.swift in Sources */,
+				9B8787BE1EF57EE2001FA898 /* AudioRecordFileListCell.swift in Sources */,
 				9BB500431ED9C9B400683E14 /* Notification.swift in Sources */,
+				9B8787BC1EF57EB3001FA898 /* AudioRecordFileListViewController.swift in Sources */,
 				9B9E238A1EED63C200778ADD /* FileUtil.swift in Sources */,
 				9B29B11C1EAE39D70045667A /* AudioPlayerViewController.swift in Sources */,
 				9B64EE241EB5AF2500143DCB /* VideoPlayerView.swift in Sources */,
 				9BB500451ED9CCED00683E14 /* GlobalPlayer.swift in Sources */,
 				9B9E23881EED396E00778ADD /* ControlSlider.swift in Sources */,
 				9B9E238C1EED7C6500778ADD /* Date+Format.swift in Sources */,
+				9B8787BA1EF559A6001FA898 /* AssetUtil.swift in Sources */,
 				9B64EE2E1EB5C22800143DCB /* PlayerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

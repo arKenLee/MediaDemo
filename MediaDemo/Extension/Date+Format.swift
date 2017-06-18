@@ -15,10 +15,10 @@ extension Date {
         
         if Date.recordFileDateFormatter == nil {
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm"
+            formatter.dateFormat = "yyyy-MM-dd HH_mm_ss"
             Date.recordFileDateFormatter = formatter
         }
         
-        return String(format: "%@.caf", Date.recordFileDateFormatter!.string(from: self))
+        return Date.recordFileDateFormatter!.string(from: self)
     }
 }

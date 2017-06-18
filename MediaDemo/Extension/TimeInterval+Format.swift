@@ -8,9 +8,16 @@
 
 import Foundation
 
+let placeholderPlayTimeString = "--:--"
+let defaultRecordDurationString = "00:00:00"
+
 extension TimeInterval {
     var playTimeString: String {
         var time = Int(self)
+        
+        if time == 0 {
+            return "00:00"
+        }
         
         let second = time % 60
         time /= 60
@@ -27,6 +34,10 @@ extension TimeInterval {
     
     var recordDurationString: String {
         var time = Int(self)
+        
+        if time == 0 {
+            return defaultRecordDurationString
+        }
         
         let second = time % 60
         time /= 60
