@@ -15,13 +15,13 @@
 		9B64EE171EB4CCD000143DCB /* Zella Day - East of Eden.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9B64EE161EB4CCD000143DCB /* Zella Day - East of Eden.mp3 */; };
 		9B64EE191EB4CCFA00143DCB /* Young Rising Sons - Turnin'.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9B64EE181EB4CCFA00143DCB /* Young Rising Sons - Turnin'.mp3 */; };
 		9B64EE201EB50F5F00143DCB /* AudioRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE1F1EB50F5F00143DCB /* AudioRecorderViewController.swift */; };
-		9B64EE241EB5AF2500143DCB /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE231EB5AF2500143DCB /* VideoPlayerView.swift */; };
 		9B64EE261EB5AF4E00143DCB /* PlayerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE251EB5AF4E00143DCB /* PlayerTableViewController.swift */; };
 		9B64EE281EB5B07200143DCB /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE271EB5B07200143DCB /* PlayerView.swift */; };
 		9B64EE2A1EB5BD7400143DCB /* AudioPlayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE291EB5BD7400143DCB /* AudioPlayTableViewCell.swift */; };
 		9B64EE2C1EB5BD8A00143DCB /* VideoPlayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE2B1EB5BD8A00143DCB /* VideoPlayTableViewCell.swift */; };
 		9B64EE2E1EB5C22800143DCB /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE2D1EB5C22800143DCB /* PlayerViewController.swift */; };
 		9B64EE311EB5CB1C00143DCB /* TimeInterval+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64EE301EB5CB1C00143DCB /* TimeInterval+Format.swift */; };
+		9B6E91D41F49C63800EAF7E8 /* samplemovie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 9B6E91D31F49C63800EAF7E8 /* samplemovie.mov */; };
 		9B719F081E90EA1100829C32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B719F071E90EA1100829C32 /* AppDelegate.swift */; };
 		9B719F0D1E90EA1100829C32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B719F0B1E90EA1100829C32 /* Main.storyboard */; };
 		9B719F0F1E90EA1100829C32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B719F0E1E90EA1100829C32 /* Assets.xcassets */; };
@@ -61,13 +61,13 @@
 		9B64EE181EB4CCFA00143DCB /* Young Rising Sons - Turnin'.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Young Rising Sons - Turnin'.mp3"; sourceTree = "<group>"; };
 		9B64EE1E1EB4EF4A00143DCB /* MediaDemo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MediaDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		9B64EE1F1EB50F5F00143DCB /* AudioRecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewController.swift; sourceTree = "<group>"; };
-		9B64EE231EB5AF2500143DCB /* VideoPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		9B64EE251EB5AF4E00143DCB /* PlayerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewController.swift; sourceTree = "<group>"; };
 		9B64EE271EB5B07200143DCB /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		9B64EE291EB5BD7400143DCB /* AudioPlayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayTableViewCell.swift; sourceTree = "<group>"; };
 		9B64EE2B1EB5BD8A00143DCB /* VideoPlayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayTableViewCell.swift; sourceTree = "<group>"; };
 		9B64EE2D1EB5C22800143DCB /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		9B64EE301EB5CB1C00143DCB /* TimeInterval+Format.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Format.swift"; sourceTree = "<group>"; };
+		9B6E91D31F49C63800EAF7E8 /* samplemovie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = samplemovie.mov; sourceTree = "<group>"; };
 		9B719F041E90EA1100829C32 /* MediaDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediaDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B719F071E90EA1100829C32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9B719F0C1E90EA1100829C32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -218,7 +218,6 @@
 		9B29B1131EAE394A0045667A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9B64EE231EB5AF2500143DCB /* VideoPlayerView.swift */,
 				9B64EE271EB5B07200143DCB /* PlayerView.swift */,
 				9B64EE291EB5BD7400143DCB /* AudioPlayTableViewCell.swift */,
 				9B64EE2B1EB5BD8A00143DCB /* VideoPlayTableViewCell.swift */,
@@ -260,6 +259,7 @@
 		9B29B11D1EAE43EA0045667A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9B6E91D31F49C63800EAF7E8 /* samplemovie.mov */,
 				9BC8B7AE1EAE5A5900890804 /* TheFatRat - Unity.mp3 */,
 				9B64EE121EB4CCA000143DCB /* Colbie Caillat - Try.mp3 */,
 				9B64EE101EB4CC8C00143DCB /* Chris Medina - What Are Words.mp3 */,
@@ -461,6 +461,7 @@
 				9B64EE131EB4CCA000143DCB /* Colbie Caillat - Try.mp3 in Resources */,
 				9B64EE151EB4CCC200143DCB /* OneRepublic - Counting Stars.mp3 in Resources */,
 				9B719F0D1E90EA1100829C32 /* Main.storyboard in Resources */,
+				9B6E91D41F49C63800EAF7E8 /* samplemovie.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,7 +493,6 @@
 				9B8787BC1EF57EB3001FA898 /* AudioRecordFileListViewController.swift in Sources */,
 				9B9E238A1EED63C200778ADD /* FileUtil.swift in Sources */,
 				9B29B11C1EAE39D70045667A /* AudioPlayerViewController.swift in Sources */,
-				9B64EE241EB5AF2500143DCB /* VideoPlayerView.swift in Sources */,
 				9BB500451ED9CCED00683E14 /* GlobalPlayer.swift in Sources */,
 				9B9E23881EED396E00778ADD /* ControlSlider.swift in Sources */,
 				9B9E238C1EED7C6500778ADD /* Date+Format.swift in Sources */,

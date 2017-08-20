@@ -91,7 +91,7 @@ class AudioRecorderViewController: UIViewController {
     
     deinit {
         invalidateRecorderTimer()
-        deregisterNotification()
+        unregisterNotification()
     }
     
     // MARK: - Status Bar
@@ -493,7 +493,7 @@ extension AudioRecorderViewController: AVAudioRecorderDelegate {
                 sourceURL = sSelf.tempRecordFilePath
             }
             
-            mixAudio1(url1: sourceURL, audio2: recorder.url, outputURL: sSelf.tempRecordFilePath) { (success) in
+            pieceAudio(url1: sourceURL, audio2: recorder.url, outputURL: sSelf.tempRecordFilePath) { (success) in
                 DispatchQueue.main.async { [weak self] in
                     guard let ssSelf = self else {
                         return
@@ -734,7 +734,7 @@ extension AudioRecorderViewController {
                                        object: nil)
     }
     
-    fileprivate func deregisterNotification() {
+    fileprivate func unregisterNotification() {
         NotificationCenter.default.removeObserver(self)
     }
     

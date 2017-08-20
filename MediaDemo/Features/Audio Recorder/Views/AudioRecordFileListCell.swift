@@ -12,18 +12,10 @@ let AudioRecordFileListCellIdentifier = "AudioRecordFileListCell"
 
 class AudioRecordFileListCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        if selected {
-            accessoryView = UIImageView(image: #imageLiteral(resourceName: "audio_icon_playing"))
-        } else {
-            accessoryView = nil
-        }
+        accessoryView = selected ? UIImageView(image: #imageLiteral(resourceName: "audio_icon_playing")) : nil
     }
-
+    
 }

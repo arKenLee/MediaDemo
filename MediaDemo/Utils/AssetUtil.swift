@@ -6,10 +6,11 @@
 //  Copyright © 2017年 arKen. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import AVFoundation
 
-func mixAudio1(url1: URL, audio2 url2: URL, outputURL: URL, completion: ((Bool)->Void)?) {
+// 拼接音频
+func pieceAudio(url1: URL, audio2 url2: URL, outputURL: URL, completion: ((Bool)->Void)?) {
     
     let fileManager = FileManager.default
     
@@ -50,7 +51,7 @@ func mixAudio1(url1: URL, audio2 url2: URL, outputURL: URL, completion: ((Bool)-
             try track.insertTimeRange(timeRange, of: audioAssetTrack2, at: timePosition)
             timePosition = audioAsset2.duration
         } catch let error {
-            NotificationMessageWindow.show(message: "插入第一个音轨失败: \(error.localizedDescription)")
+            NotificationMessageWindow.show(message: "插入第二个音轨失败: \(error.localizedDescription)")
         }
     }
     
@@ -67,3 +68,18 @@ func mixAudio1(url1: URL, audio2 url2: URL, outputURL: URL, completion: ((Bool)-
         completion?(success)
     }
 }
+
+
+func thumbnailImage(from url: URL, time: CMTime) -> UIImage? {
+    let asset = AVURLAsset(url: url)
+    let generator = AVAssetImageGenerator(asset: asset)
+    
+    do {
+        let thumbnailImageRef = try generator.copyCGImage(at: time, actualTime: nil)
+        return UIImage(cgImage: thumbnailImageRef)
+    } catch let error as NSError {
+        print("error: \(error.localizedDescription)")
+        return nil
+    }
+}
+

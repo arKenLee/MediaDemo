@@ -228,7 +228,7 @@ class AudioRecordFileListViewController: UITableViewController, AVAudioPlayerDel
         notificationCenter.addObserver(self, selector: #selector(pauseAudio(_:)), name: AllPauseNotification, object: nil)
     }
     
-    private func deregisterNotification() {
+    private func unregisterNotification() {
         let audioSession = AVAudioSession.sharedInstance()
         let notificationCenter = NotificationCenter.default
         

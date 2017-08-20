@@ -1,6 +1,6 @@
 //
 //  NotificationMessageWindow.swift
-//  MediaDemo
+//
 //
 //  Created by Lee on 2017/4/29.
 //  Copyright © 2017年 arKen. All rights reserved.

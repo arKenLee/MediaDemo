@@ -59,7 +59,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
     }
     
     deinit {
-        deregisterNotification()
+        unregisterNotification()
     }
     
     
@@ -407,7 +407,7 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
         notificationCenter.addObserver(self, selector: #selector(pauseAudio(_:)), name: AllPauseNotification, object: nil)
     }
     
-    private func deregisterNotification() {
+    private func unregisterNotification() {
         let audioSession = AVAudioSession.sharedInstance()
         let notificationCenter = NotificationCenter.default
         
@@ -473,7 +473,6 @@ class AudioPlayerViewController: UIViewController, AVAudioPlayerDelegate {
             
             shouldResumePlay = false
         }
-        
     }
     
     // 硬件路由改变
